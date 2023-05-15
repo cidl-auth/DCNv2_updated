@@ -8,7 +8,7 @@ from torch.autograd import Function
 from torch.autograd.function import once_differentiable
 from torch.nn.modules.utils import _pair, _single
 from torch.utils.cpp_extension import load
-
+from torch.utils.cpp_extension import CUDA_HOME
 
 filename = "dcn_v2_cuda.cpp" if torch.cuda.is_available() and CUDA_HOME is not None else "dcn_v2.cpp"
 
