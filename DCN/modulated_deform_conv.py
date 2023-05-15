@@ -10,19 +10,19 @@ from torch.nn.modules.utils import _pair, _single
 from torch.utils.cpp_extension import load
 
 
-filename = "dcn_v2_cuda.cpp" if torch.cuda.is_available() else "dcn_v2.cpp"
+filename = "dcn_v2_cuda.cpp" if torch.cuda.is_available() and CUDA_HOME is not None else "dcn_v2.cpp"
 
 extensions_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src")
 main_file = glob.glob(os.path.join(extensions_dir, filename))
 source_cpu = glob.glob(os.path.join(extensions_dir, "cpu", "*.cpp"))
 source_cuda = (
     glob.glob(os.path.join(extensions_dir, "cuda", "*.cu"))
-    if torch.cuda.is_available()
+    if torch.cuda.is_available() and CUDA_HOME is not None
     else []
 )
 
 ext_module = load(
-    name="DCNv2_" + ("gpu" if torch.cuda.is_available() else "cpu"),
+    name="DCNv2_" + ("gpu" if torch.cuda.is_available() and CUDA_HOME is not None else "cpu"),
     sources=main_file + source_cpu + source_cuda,
     extra_cflags=["-O3"],
     extra_cuda_cflags=[
